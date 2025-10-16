@@ -4,6 +4,9 @@ import { notFound } from "./middlewares/notFound.js";
 import { errorHandlerMiddleware } from "./middlewares/errorHandlerMiddleware.js";
 import connectDB from "./config/db.js";
 
+// Routes Import
+import authRoutes from "./routes/authRoutes.js"
+
 
 
 
@@ -20,9 +23,10 @@ app.use(express.json());
 
 
 // Routes
-// app.use('/api/v1/auth', authRoutes)
-// app.use('/api/v1/workouts', authMiddleware, verifyEmailMiddleware, workoutRoutes)
-// app.use('/api/v1/pr', authMiddleware, verifyEmailMiddleware, prRoutes)
+app.use('/api/v1/auth', authRoutes)
+
+// app.use('/api/v1/', authMiddleware, verifyEmailMiddleware, workoutRoutes)
+// app.use('/api/v1/', authMiddleware, verifyEmailMiddleware, prRoutes)
 
 
 // Default route

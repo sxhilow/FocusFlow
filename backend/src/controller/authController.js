@@ -1,6 +1,6 @@
-const User = require('../modles/User') // <- Need to import the User model 
+// const User = require('../modles/User') // <- Need to import the User model 
 import { StatusCodes } from 'http-status-codes'
-import { BadRequestError, UnauthenticatedError } from '../errors/index'
+import { BadRequestError, UnauthenticatedError } from '../errors/index.js'
 
 export const register = async (req, res) => {
     const user  = await User.create({ ...req.body })
