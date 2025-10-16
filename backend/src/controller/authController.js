@@ -1,18 +1,18 @@
-const User = require('../modles/User')
-const {StatusCodes} = require('http-status-codes')
-const { BadRequest, UnauthenticatedError } = require('../errors/index')
+const User = require('../modles/User') // <- Need to import the User model 
+import { StatusCodes } from 'http-status-codes'
+import { BadRequestError, UnauthenticatedError } from '../errors/index'
 
-const register = async (req, res) => {
+export const register = async (req, res) => {
     const user  = await User.create({ ...req.body })
     const token = user.createJWT()
     res.status(StatusCodes.CREATED).json({user:{name: user.name} ,token})
 }
 
-const login = async (req,res) => {
+export const login = async (req,res) => {
     const {email, password} = req.body;
 
     if(!email || !password){
-        throw new BadRequest('Please provide email and password')
+        throw new BadRequestError('Please provide email and password')
     }
 
     const user = await User.findOne({email}) 
@@ -30,10 +30,4 @@ const login = async (req,res) => {
     const token = user.createJWT();
 
     res.status(StatusCodes.OK).json({user:{name: user.name}, token})
-}
-
-
-module.exports = {
-    register,
-    login
 }
