@@ -13,6 +13,9 @@ import {authMiddleware} from "./middlewares/authMiddleware.js"
 // Routes Import
 import authRoutes from "./routes/authRoutes.js"
 import taskRoutes from "./routes/taskRoutes.js"
+import sessionRoutes from "./routes/sessionRoutes.js"
+import rewardRoutes from "./routes/rewardRoutes.js"
+import userRoutes from "./routes/userRoutes.js"
 
 
 
@@ -31,8 +34,10 @@ app.use(express.json());
 
 // Routes
 app.use('/api/v1/auth', authRoutes)
-app.use('/api/v1/task', taskRoutes)
-
+app.use('/api/v1/task', authMiddleware, taskRoutes)
+app.use('/api/v1/sessions', sessionRoutes)
+app.use('/api/v1/reward', authMiddleware, rewardRoutes)
+app.use('/api/v1/user', authMiddleware, userRoutes)
 
 
 
