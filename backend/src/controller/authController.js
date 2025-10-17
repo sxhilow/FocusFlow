@@ -1,4 +1,4 @@
-// const User = require('../modles/User') // <- Need to import the User model 
+import User from "../models/userModel.js"
 import { StatusCodes } from 'http-status-codes'
 import { BadRequestError, UnauthenticatedError } from '../errors/index.js'
 

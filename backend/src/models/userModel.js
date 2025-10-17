@@ -52,8 +52,6 @@ UserSchema.pre('save', async function(){
     this.password = await bcrypt.hash(this.password, salt)
 })
 
-UserSchema.index({ email: 1 }, { unique: true })
-
 UserSchema.methods.createJWT = function(){
     return createAuthToken({userId: this._id, name: this.name})
 }

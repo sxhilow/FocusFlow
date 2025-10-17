@@ -53,7 +53,7 @@ const SessionSchema = new mongoose.Schema({
         min: 0 }
 }, { timestamps: true });
 
-sessionSchema.pre('save', function() {
+SessionSchema.pre('save', function() {
     if(this.startTime && this.endTime) {
         this.duration = (this.endTime - this.startTime) / (1000 * 60);
     }
@@ -65,5 +65,5 @@ SessionSchema.index({ userId: 1, createdAt: -1 });
 SessionSchema.index({ createdAt: 1 }, { expireAfterSeconds: 31536000 }); // TTL 1 year
 
 
-export default mongoose.model('Session', sessionSchema)
+export default mongoose.model('Session', SessionSchema)
 
