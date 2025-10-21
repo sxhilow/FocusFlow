@@ -35,7 +35,7 @@ app.use(express.json());
 // Routes
 app.use('/api/v1/auth', authRoutes)
 app.use('/api/v1/task', authMiddleware, taskRoutes)
-app.use('/api/v1/sessions', sessionRoutes)
+app.use('/api/v1/sessions', authMiddleware, sessionRoutes)
 app.use('/api/v1/reward', authMiddleware, rewardRoutes)
 app.use('/api/v1/user', authMiddleware, userRoutes)
 
