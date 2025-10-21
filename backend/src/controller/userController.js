@@ -1,4 +1,3 @@
-// Sisanda is incharge of this logic
 import User from "../models/userModel.js"
 import { updateStreakOnLogin } from './streakController.js'
 import { StatusCodes } from 'http-status-codes'
@@ -20,10 +19,6 @@ export const addStreak = async (req, res) => {
     res.status(StatusCodes.OK).json({streak})
 }
 
-
-
-
-
 export const updateStreak = async (req, res) => {
     const { current, longest, lastDate } = req.body
     const user = await User.findById(req.user.userId)
@@ -37,14 +32,24 @@ export const updateStreak = async (req, res) => {
     res.status(StatusCodes.OK).json({streak: user.streak})
 }
 
-export const getCategories = async (req, res) => {
-    res.send("get all Ctaegories")
-}
+// implemented the update user service...
 
 export const updateUserProfile = async(req, res) => {
-    res.send("Update user profile")
-}
+    const {userId} = req.user
+    const updatesData = req.body
 
+    const updatedUser = await User.findByIdAndUpdate(
+        userId, 
+        {$set: updatesData},
+        {new: true, runValidators: true}
+    ).select('-passowrd')
+
+    if (!updatedUser) {
+        return res.status(StatusCodes.NOT_FOUND).json({ msg: "User not found" });
+    }
+
+    res.status(StatusCodes.OK).json({user: updatedUser})
+}
 
 
 
