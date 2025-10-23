@@ -4,7 +4,7 @@ import {BadRequestError, NotFoundError} from "../errors/index.js";
 import Reward from "../models/rewardsModel.js";
 import User from "../models/userModel.js";
 
-//Get api rewards, Fetch all rewards for the logged-in user
+//Get (api) rewards, Fetch all rewards for the logged-in user
 export const getAllRewards = async (req, res) => {
     const{userId} = req.user;
 
@@ -17,7 +17,7 @@ export const getAllRewards = async (req, res) => {
     res.status(StatusCodes.OK).json({rewards});
 };
 
-//Post api create rewards
+//Post (api) create rewards
 export const createReward = async(req, res) => {
     const{userId} = req.user;
     const{title, cost, type} = req.body;
@@ -40,7 +40,7 @@ export const createReward = async(req, res) => {
     res.status(StatusCodes.CREATED).json({reward});
 };
 
-//Post api redeem rewards
+//Post (api) redeem rewards
 export const redeemReward = async(req, res) => {
     const{userId} = req.user;
     const{rewardId} = req.body;
