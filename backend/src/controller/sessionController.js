@@ -1,6 +1,8 @@
 // Sahil is responsible for this logic
 import { BadRequestError, NotFoundError } from "../errors/index.js";
 import Session from "../models/sessionsModel.js"
+import Transaction from "../models/transactionModel.js";
+import User from "../models/userModel.js"
 import { StatusCodes } from "http-status-codes";
 
 export const getSession = async (req, res) => {
@@ -77,6 +79,16 @@ export const stopSession = async (req, res) => {
     session.validate = true;
 
     await session.save();
+
+    const user = await User.findById(userId);
+
+    await Transaction.create({
+        userId,
+        type: 'earn',
+        amount: points,
+        balanceAfter: user.points,
+        reason: `Earned ${points} points for completing session`
+    });
 
     res.status(StatusCodes.OK).json({session})
 
