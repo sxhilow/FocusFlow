@@ -1,64 +1,39 @@
 //Ayanda is doing this
 import {StatusCodes} from "http-status-codes";
 import {BadRequestError, NotFoundError} from "../errors/index.js";
-import Reward from "../models/rewardsModel.js";
+import Rewards from "../models/rewardsModel.js";
 import User from "../models/userModel.js";
+import Transaction from "../models/transactionModel.js"
 
 //Get (api) rewards, Fetch all rewards for the logged-in user
 export const getAllRewards = async (req, res) => {
-    const{userId} = req.user;
 
-    const rewards = await Reward.find({userId}).sort({redeemedAt: -1});
+    const rewards = await Rewards.find().sort({cost: 1});
 
-    if (rewards.length === 0) {
-        throw new NotFoundError("No rewards found.");
+    if (!rewards || rewards.length === 0) {
+        throw new NotFoundError("No rewards available.");
     }
 
     res.status(StatusCodes.OK).json({rewards});
 };
 
-//Post (api) create rewards
-export const createReward = async(req, res) => {
-    const{userId} = req.user;
-    const{title, cost, type} = req.body;
-
-    if(!title || !cost) {
-        throw new BadRequestError("Reward title is required.");
-    }
-    if(cost <= 0) {
-        throw new BadRequestError("Reward cost must be greater than zero.");
-    }
-
-    const reward = await Reward.create({
-        userId,
-        title,
-        cost,
-        type: type || "custom", 
-        redeemedAt: null,
-    });
-
-    res.status(StatusCodes.CREATED).json({reward});
-};
+//Post (api) create rewards - (End User not allowed to create Rewards)
 
 //Post (api) redeem rewards
 export const redeemReward = async(req, res) => {
     const{userId} = req.user;
-    const{rewardId} = req.body;
+    const{id : rewardId} = req.params;
 
     if(!rewardId) {
         throw new BadRequestError("Reward ID is required.");
     }
 
-    const reward = await Reward.findOne({_id: rewardId, userId});
+    const reward = await Rewards.findOne({_id: rewardId});
 
     if(!reward){
         throw new NotFoundError("Reward not found.");
     }
 
-    //Prevent re-redeeming
-    if(reward.redeemedAt) {
-        throw new BadRequestError("Reward has already been redeemed.");
-    }
 
     const user = await User.findById(userId);
 
@@ -74,10 +49,18 @@ export const redeemReward = async(req, res) => {
     user.points -= reward.cost;
     reward.redeemedAt = new Date();
 
+
     await user.save();
     await reward.save();
 
-    //Log transaction history
+    await Transaction.create({
+        userId,
+        type: 'redeem',
+        amount: -reward.cost,
+        balanceAfter: user.points,
+        reason: `Redeemed reward: ${reward.title}`,
+    });
+
     res.status(StatusCodes.OK).json({
         message: "Reward redeemed successfully.",
         remainingPoints: user.points,
