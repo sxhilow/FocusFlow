@@ -5,7 +5,7 @@ import Header from './Header'
 const PublicLayout = () => {
 
   return (
-    <div className={`relative h-screen bg-gradient-to-b from-purple-50 to-orange-100`}>      
+    <div className={`relative bg-hero`}>      
       
         <Header />
 

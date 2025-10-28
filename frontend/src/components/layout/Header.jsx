@@ -13,7 +13,7 @@ const Header = () => {
         <div className='flex justify-center items-center gap-2'>
 
           <Button  
-              to={'/register'}
+              to={'/login'}
               className=""
             >
                   <span className=' text-primary-yellow font-medium'>Login</span>

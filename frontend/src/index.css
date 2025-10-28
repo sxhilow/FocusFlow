@@ -15,8 +15,8 @@
     --color-primary-yellow: #E7A339;
     --color-primary-red: #D9534F;
 
-    --color-neutral-black: #F5F5F5;
-    --color-neutral-white: #333333;
+    --color-neutral-white: #F5F5F5;
+    --color-neutral-black: #333333;
 
 
     --text-desktop-h1: 65px;
@@ -32,9 +32,33 @@
     --text-mobile-h4: 18px;
     --text-mobile-h5: 16px;
     --text-mobile-p: 16px;
+
+      
 }
+
+@layer utilities {
+  .bg-blue-red-blue {
+    background-image: linear-gradient(
+      to right,
+      var(--color-primary-blue) 0%,
+      #c57474 45%,
+      var(--color-primary-blue) 100%
+    );
+  }
+
+  .bg-hero{
+    background-image: linear-gradient(
+    180deg,
+    #ffe8f0 0%,             
+    #fff7e0 40%,           
+    #e6f0ff 100%           
+  );
+  }
+}
+
 
 body{
     background-color: var(--color-bg);
     font-family: var(--font-base);
 }
+

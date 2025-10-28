@@ -7,6 +7,9 @@ import Settings from "./icons/Settings.svg"
 import Columns from "./icons/Columns.svg"
 import Right from "./icons/Right.svg"
 
+
+import HeroImage from "./images/heroImg.png"
+
 export {
     Logo,
     Layers,
@@ -15,5 +18,6 @@ export {
     Rocket,
     Settings,
     Columns,
-    Right
+    Right,
+    HeroImage
 }
