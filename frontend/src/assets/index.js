@@ -6,6 +6,7 @@ import Rocket from "./icons/Rocket.svg"
 import Settings from "./icons/Settings.svg"
 import Columns from "./icons/Columns.svg"
 import Right from "./icons/Right.svg"
+import Google from "./icons/Google.svg"
 
 
 import HeroImage from "./images/heroImg.png"
@@ -19,5 +20,6 @@ export {
     Settings,
     Columns,
     Right,
-    HeroImage
+    HeroImage,
+    Google
 }

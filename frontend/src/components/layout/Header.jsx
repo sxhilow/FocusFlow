@@ -22,7 +22,7 @@ const Header = () => {
 
             <Button  
               to={'/register'}
-              className="flex justify-center items-center gap-1 bg-gradient-to-br to-secondary-blue from-primary-blue hover:to-primary-blue hover:from-secondary-blue rounded-full duration-300 transition-colors px-5 py-3 group"
+              className="flex justify-center items-center gap-1 bg-gradient-to-br to-secondary-blue from-primary-blue hover:to-primary-blue hover:from-secondary-blue rounded-full duration-300 transition-colors px-3 py-2 md:px-5 md:py-3 group"
             >
                   <span className=' text-bg'>Get Started</span>
                   <img src={Right} alt='Arrow' className='group-hover:translate-x-1 transform transition'/>

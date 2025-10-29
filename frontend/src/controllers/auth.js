@@ -31,3 +31,7 @@ export const logoutUser = async () => {
         throw error;
     }
 }
+
+export const googleLogin = () => {
+    window.location.href = 'http://localhost:3000/api/v1/auth/google'
+}

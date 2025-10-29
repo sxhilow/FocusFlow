@@ -1,12 +1,7 @@
 import React, { useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { useUI } from '../../context/UIContext'
-import { useUser } from '../../context/UserContext'
 
 const AuthRedirect = () => {
-
-    const {authModal, setAuthModal} = useUI()
-    const {user, userLoading} = useUser()
 
     const location = useLocation()
     const navigate = useNavigate()
@@ -17,19 +12,12 @@ const AuthRedirect = () => {
 
         if(token){
             localStorage.setItem("token", token)
+            navigate('/dashboard')
         }else{
-            setAuthModal('login')
-            navigate('/')
+            navigate('/login')
         }
 
-        if(!userLoading){
-          if(!user?.is_profile_complete){
-            navigate('/complete-profile')
-          }else{
-            navigate('/projects')
-          }
-        }
-    }, [location, navigate, user, userLoading])
+    }, [location, navigate])
 
   return (
     <div className='w-full h-screen flex justify-center items-center text-desktop-h2 font-bold'>Processing Login...</div>

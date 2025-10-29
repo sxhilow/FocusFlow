@@ -1,9 +1,17 @@
 import { useState } from 'react'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import { ProtectedLayout, PublicLayout, SettingsLayout } from './components'
-import { LandingPage } from './pages'
+import { AuthRedirect, LandingPage, Login, PageNotFound, Register } from './pages'
 
 const router = createBrowserRouter([
+  {
+    path: "/login",
+    element: <Login/>
+  },
+  {
+    path: "/register",
+    element: <Register/>
+  },
   {
     element: <PublicLayout/>,
     children:[
@@ -13,19 +21,11 @@ const router = createBrowserRouter([
       },
       {
         path: "/auth-redirect",
-        element: {/*redirect page*/}
-      },
-      {
-        path: "/login",
-        element: {/*login page*/}
-      },
-      {
-        path: "/register",
-        element: {/*register page*/}
+        element: <AuthRedirect/>
       },
       {
         path: "*",
-        element: {/*404 page*/}
+        element: <PageNotFound/>
       },
     ]
   },
