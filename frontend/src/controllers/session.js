@@ -10,9 +10,9 @@ export const fetchSessions = async () => {
     }
 }
 
-export const startSession = async () => {
+export const startSession = async (taskId, commitmentData) => {
     try {
-        const res = await API.post('/sessions/start')
+        const res = await API.post('/sessions/start', {taskId, commitmentData})
         return res.data
     } catch (error) {
         console.error("Error starting session: ", error.response?.data || error.message)
@@ -20,32 +20,12 @@ export const startSession = async () => {
     }
 }
 
-export const stopSession = async () => {
+export const stopSession = async (reflectionData) => {
     try {
-        const res = await API.post('/sessions/stop')
+        const res = await API.post('/sessions/stop', reflectionData)
         return res.data
     } catch (error) {
         console.error("Error stopping session: ", error.response?.data || error.message)
-        throw error;
-    }
-}
-
-export const addSessionCommitment = async (commitmentData) => {
-    try {
-        const res = await API.post('/sessions/commit', commitmentData)
-        return res.data
-    } catch (error) {
-        console.error("Error adding session commitment: ", error.response?.data || error.message)
-        throw error;
-    }
-}
-
-export const addSessionRelection = async (reflectionData) => {
-    try {
-        const res = await API.post('/sessions/reflect', reflectionData)
-        return res.data
-    } catch (error) {
-        console.error("Error adding session reflection: ", error.response?.data || error.message)
         throw error;
     }
 }

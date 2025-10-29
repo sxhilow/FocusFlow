@@ -1,5 +1,11 @@
 import express from "express";
 import dotenv from "dotenv";
+import cors from "cors"
+import passport from "passport";
+
+dotenv.config();
+
+import "./utils/passport.js" 
 
 // DB config
 import connectDB from "./config/db.js";
@@ -18,18 +24,25 @@ import rewardRoutes from "./routes/rewardRoutes.js"
 import userRoutes from "./routes/userRoutes.js"
 
 
-
-
-dotenv.config();
-
 const app = express();
 const port = process.env.PORT || 3000
 
 // Middlewares
 app.use(express.json());
 
+const allowedOrigins = [
+  'http://localhost:5173', // for local development
+  "https://accounts.google.com/"
+];
 
+app.use(cors({
+  origin: allowedOrigins,
+  methods: ['GET', 'POST', 'PATCH', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true // Allows cookies and authorization headers
+}));
 
+app.use(passport.initialize());
 
 
 // Routes

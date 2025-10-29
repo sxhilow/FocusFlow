@@ -44,7 +44,7 @@ export const updateUserProfile = async(req, res) => {
         userId, 
         {$set: updatesData},
         {new: true, runValidators: true}
-    ).select('-passowrd')
+    ).select('-password')
 
     if (!updatedUser) {
         throw new NotFoundError("User not found.");
