@@ -1,6 +1,5 @@
 import express from "express"
 import passport from "passport";
-
 import { login, register } from "../controller/authController.js";
 
 const router = express.Router();
@@ -8,14 +7,13 @@ const router = express.Router();
 router.post('/register', register)
 router.post('/login', login)
 
-router.get("/google", 
+router.get("/google",
   
   passport.authenticate('google', { scope: [
         'openid', 'email', 'profile']
   })
 
 )
-
 
 router.get("/google/callback", 
 

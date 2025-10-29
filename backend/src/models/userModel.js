@@ -18,8 +18,13 @@ const UserSchema = new mongoose.Schema({
     },
     password:{
         type: String,
-        required: [true, 'Please provide password'],
-        minlength: 6
+        minlength: 6,
+        select: false
+    },
+    googleId: {
+        type: String,
+        unique: true,
+        sparse: true,
     },
     points:{
         type: Number,
@@ -46,7 +51,7 @@ UserSchema.index({ createdAt: -1 });
 
 UserSchema.pre('save', async function(){
 
-    if(!this.isModified('password')) return;
+    if(!this.isModified('password') || !this.password) return;
 
     const salt = await bcrypt.genSalt(10);
     this.password = await bcrypt.hash(this.password, salt)

@@ -4,6 +4,10 @@ import { BadRequestError, UnauthenticatedError } from '../errors/index.js'
 import { updateStreakOnLogin } from './streakController.js'
 
 export const register = async (req, res) => {
+    if (!req.body.password) {
+        return res.status(StatusCodes.BAD_REQUEST).json({ msg: "Password is required for signups" });
+    }
+
     const user  = await User.create({ ...req.body })
     const token = user.createJWT()
     // initialize streak on first registration
@@ -12,6 +16,8 @@ export const register = async (req, res) => {
 }
 
 export const login = async (req,res) => {
+    console.log(req.body);
+    
     const {email, password} = req.body;
 
     if(!email || !password){
