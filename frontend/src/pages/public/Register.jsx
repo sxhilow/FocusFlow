@@ -1,14 +1,15 @@
 import React, { useState } from 'react'
 import {Google, Logo} from "../../assets"
 import { Button, FormField } from '../../components'
-import { googleLogin, loginUser } from '../../controllers/auth'
+import { googleLogin, loginUser, registerUser } from '../../controllers/auth'
 import { useNavigate } from 'react-router-dom'
 
 
 
-const Login = () => {
+const Register = () => {
 
   const [formData, setFormData] = useState({
+    name: "",
     email: "",
     password: ""
   })
@@ -16,16 +17,16 @@ const Login = () => {
   const [error, setError] = useState(null)
   const navigate = useNavigate()
 
-  const handleLogin = async (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault()
     setLoading(true)
     setError(null)
 
     try {
-      await loginUser(formData)
+      await registerUser(formData)
       navigate('/dashboard')
     } catch (error) {
-      setError(error.response?.data?.msg || "Server Error")
+      setError(error.response?.data?.msg || "Internal Server Error")
       console.error("Login Error:", error.response?.data || error.message);
     }finally{
       setLoading(false)
@@ -45,8 +46,8 @@ const Login = () => {
         <div className='bg-neutral-white md:px-16 px-4 py-8 md:py-10 w-full rounded-xl shadow-sm'>
 
           <div className='mb-10'>
-            <h1 className='text-center text-desktop-h5 font-medium'>Login & Lockin</h1>
-            <p className='text-center text-neutral-600'>Your productivity journey continues here.</p>
+            <h1 className='text-center text-desktop-h5 font-medium'>Join the Flow</h1>
+            <p className='text-center text-neutral-600'>Create your free account and make productivity fun.</p>
           </div>
 
           {
@@ -59,7 +60,15 @@ const Login = () => {
 
 
 
-          <form onSubmit={handleLogin}>
+          <form onSubmit={handleRegister}>
+
+            <FormField 
+            value={formData.name}
+            label={"Name"} labelClassName='text-neutral-black'
+            inputClassName={'bg-white border-none'}
+            required
+            onChange={(e) => setFormData({...formData, name: e.target.value})}
+            />
 
             <FormField 
             value={formData.email}
@@ -84,7 +93,7 @@ const Login = () => {
               className="flex w-full mt-2 justify-center items-center gap-1 bg-gradient-to-br to-secondary-blue from-primary-blue hover:to-primary-blue hover:from-secondary-blue rounded-lg duration-300 transition-colors px-5 py-3 group"
             >
               <span className=' text-bg'>
-                {loading ? "Loading..." : "Login"}
+                {loading ? "Loading..." : "Sign Up & Get Started"}
               </span>
             
             </Button>
@@ -105,19 +114,12 @@ const Login = () => {
           <div className='text-center flex flex-col'>
             <span>
               
-              New here? <Button to={'/register'} className='text-primary-blue'>
-                Create an Account
+              Already have an account? <Button to={'/register'} className='text-primary-blue'>
+                Login
               </Button>
 
             </span>
 
-            <span>
-              
-              <Button to={'/forgot-password'} className='text-primary-blue'>
-                Forgot passowrd?
-              </Button>
-
-            </span>
           </div>
         </div>
       </div>
@@ -127,7 +129,7 @@ const Login = () => {
       <div className='hidden lg:flex-1 bg-primary-blue lg:flex justify-center items-center px-16'>
 
         <span className='text-center text-desktop-h3 font-secondary text-white'>
-          “FocusFlow helps you turn work time into game time. Don’t let procrastination win, jump back in.”
+          “Plan smarter, block distractions, and level up your study sessions with FocusFlow.”
         </span>
 
       </div>
@@ -135,4 +137,4 @@ const Login = () => {
   )
 }
 
-export default Login
+export default Register

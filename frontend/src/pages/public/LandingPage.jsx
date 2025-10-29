@@ -4,7 +4,7 @@ import { HeroImage, Right } from '../../assets'
 
 const LandingPage = () => {
   return (
-    <div className='flex flex-col justify-center items-center py-20 space-y-5'>
+    <div className='flex flex-col justify-center items-center py-20 space-y-5 px-5'>
 
       <div>
           <Pill text={"Gamified Time-Blocking"}/>
@@ -30,7 +30,7 @@ const LandingPage = () => {
         </Button>
       </div>
 
-      <div className='mt-10'>
+      <div className='mt-10 '>
         <img src={HeroImage} className='w-4xl'/>
       </div>
     </div>
