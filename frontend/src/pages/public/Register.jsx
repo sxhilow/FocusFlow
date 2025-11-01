@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import {Google, Logo} from "../../assets"
 import { Button, FormField } from '../../components'
-import { googleLogin, loginUser, registerUser } from '../../controllers/auth'
+import { googleLogin, registerUser } from '../../controllers/auth'
 import { useNavigate } from 'react-router-dom'
 
 
