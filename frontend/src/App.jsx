@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import { ProtectedLayout, PublicLayout, SettingsLayout } from './components'
-import { AuthRedirect, LandingPage, Login, PageNotFound, Register } from './pages'
+import { AddTask, AuthRedirect, Dashboard, LandingPage, Login, PageNotFound, Register, Rewards } from './pages'
+import ProtectedRoutes from './utils/ProtectedRoutes'
 
 const router = createBrowserRouter([
   {
@@ -30,35 +31,40 @@ const router = createBrowserRouter([
     ]
   },
   {
-    element: <ProtectedLayout/>,
+    element: <ProtectedRoutes/>,
     children: [
       {
-        path: '/dashboard',
-        element: {/* Dashboard page*/}
-      },
-      {
-        path: '/task',
-        element: {/* Task page*/}
-      },
-      {
-        path: '/rewards',
-        element: {/* Rewards page*/}
-      },
-      {
-        element: <SettingsLayout/>,
-        children:[
+        element: <ProtectedLayout/>,
+        children: [
           {
-            path: '/settings/account',
-            element: {/*Account Info page */}
+            path: '/dashboard',
+            element: <Dashboard/>
           },
           {
-            path: '/settings/password',
-            element: {/**Change Password Page */}
+            path: '/task',
+            element: <AddTask/>
           },
           {
-            path: '/settings/history',
-            element: {/**Points History Page */}
+            path: '/rewards',
+            element: <Rewards/>
           },
+          {
+            element: <SettingsLayout/>,
+            children:[
+              {
+                path: '/settings/account',
+                element: {/*Account Info page */}
+              },
+              {
+                path: '/settings/password',
+                element: {/**Change Password Page */}
+              },
+              {
+                path: '/settings/history',
+                element: {/**Points History Page */}
+              },
+            ]
+          }
         ]
       }
     ]
