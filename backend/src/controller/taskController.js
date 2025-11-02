@@ -1,27 +1,75 @@
-// Tyreek will handle the logic within these controllers
+import { NotFoundError } from '../errors/index.js';
+import Task from '../models/taskModel.js';
+import { StatusCodes } from 'http-status-codes';
 
-
-// fetch all the tasks
+// Fetch all tasks for a user
 export const getAllTask = async (req, res) => {
-    res.send('get all task')
-}
+  const { userId } = req.user;
+  const tasks = await Task.find({ userId }).sort({ start: 1 });
+  res.status(StatusCodes.OK).json({
+    results: tasks.length,
+    tasks,
+  });
+};
 
-// fetch a single task (to edit)
+// Fetch a single task
 export const getTask = async (req, res) => {
-    res.send('get a task')
-}
+  const { userId } = req.user;
+  const { id : taskId } = req.params
 
-// create a task
+  const task = await Task.findOne({ _id: taskId, userId });
+
+  if (!task) throw new NotFoundError('Task not found');
+
+  res.status(StatusCodes.OK).json({task});
+};
+
+// Create a task
 export const createTask = async (req, res) => {
-    res.send('create a task')
-}
+  const { userId } = req.user;
+  const { title, start, end, category } = req.body;
+  
+  const task = await Task.create({
+    title,
+    start,
+    end,
+    category,
+    userId,
+  });
 
-// update a task
+  res.status(StatusCodes.CREATED).json({task});
+};
+
+// Update a task
 export const updateTask = async (req, res) => {
-    res.send('update a task')
-}
+  const { userId } = req.user;
+  const { id : taskId } = req.params;
+  const updatesData = req.body
 
-// delete a task
+  const task = await Task.findOneAndUpdate(
+    { _id: taskId, userId },
+    {$set: updatesData},
+    { new: true, runValidators: true }
+  );
+
+  if (!task) throw new NotFoundError('Task not found');
+
+  res.status(StatusCodes.OK).json({task});
+};
+
+// Delete a task
 export const deleteTask = async (req, res) => {
-    res.send('delete a task')
-}
+  const { userId } = req.user;
+  const { id : taskId } = req.params
+
+  const task = await Task.findOneAndDelete({ 
+    _id: taskId, 
+    userId 
+  });
+
+  if (!task) throw new NotFoundError('Task not found');
+
+  res.status(StatusCodes.OK).json({
+    msg: "Deleted Successfully"
+  });
+};
