@@ -1,0 +1,109 @@
+.rf-layout{
+  display:flex;
+  min-height:100vh;
+  font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+  color:#203040;
+  background: #f6fbff;
+}
+
+.rf-sidebar{
+  width:220px;
+  background:#ffffff;
+  border-right:1px solid #e6eef6;
+  padding:24px 16px;
+  display:flex;
+  flex-direction:column;
+}
+.rf-logo{
+  margin-bottom:24px;
+  padding: 0 8px;
+}
+.rf-logo .logo-img {
+  width: 100%;
+  height: auto;
+  max-width: 160px;
+}
+.rf-nav{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+.nav-item{
+  color:#4b6b7f;
+  padding:8px 12px;
+  border-radius:8px;
+  cursor:pointer;
+}
+.nav-item.active{
+  background:#eaf6ff;
+  color:#0b76b6;
+  box-shadow:0 0 0 2px rgba(11,118,182,0.06) inset;
+}
+.rf-spacer{flex:1}
+.rf-footer-nav{display:flex;flex-direction:column;gap:8px}
+
+.rf-main{
+  flex:1;
+  padding:28px 34px;
+}
+.rf-topbar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:18px;
+}
+.rf-topbar h1{font-size:28px;margin:0;color:#164a67}
+.rf-points-pill{background:#0b76b6;padding:8px 14px;border-radius:22px;color:#fff;font-weight:700}
+.rf-points-pill span{background:#ffffff22;color:transparent;padding:6px 10px;border-radius:12px;margin-left:10px}
+
+.rf-content{
+  background:#ffffff;
+  border-radius:12px;
+  padding:22px;
+  border:1px solid #e6f6ff;
+  box-shadow:0 2px 0 rgba(14,78,115,0.02);
+}
+
+.rf-grid{
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:18px;
+  margin-top:12px;
+}
+.rf-card{
+  background:linear-gradient(180deg,#ffffff,#fbfeff);
+  border:2px solid #daf3ff;
+  border-radius:12px;
+  padding:14px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  min-height:120px;
+}
+.card-top{display:flex;align-items:center;gap:10px}
+.card-icon{background:#e9f7ff;border-radius:8px;padding:8px}
+.card-title{font-weight:700;color:#14495f}
+.card-desc{color:#6b8794;font-size:13px;margin:10px 0}
+.card-footer{display:flex;align-items:center;justify-content:space-between}
+.price{background:#ffffff;border-radius:18px;padding:6px 14px;color:#0b76b6;font-weight:700;border:1px solid #e0f6ff}
+.points-icon{font-size:16px;color:#7fb6d6}
+
+/* Highlight cards that user can afford */
+.rf-card[data-affordable="true"]:hover {
+  border-color: #0b76b6;
+  transform: translateY(-1px);
+  transition: all 0.2s ease;
+}
+
+/* small screens tweaks */
+@media (max-width:1200px){
+  .rf-grid{grid-template-columns:repeat(3,1fr)}
+}
+@media (max-width:900px){
+  .rf-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media (max-width:600px){
+  .rf-sidebar{display:none}
+  .rf-grid{grid-template-columns:repeat(1,1fr)}
+  .rf-main{padding:16px}
+}

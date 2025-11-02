@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="300" height="80" viewBox="0 0 300 80" xmlns="http://www.w3.org/2000/svg">
+  <g fill="none" fill-rule="evenodd">
+    <!-- Flow text -->
+    <text x="180" y="50" font-family="Arial, sans-serif" font-size="42" font-weight="bold" fill="#FEB142">Flow</text>
+    <!-- Focus text -->
+    <text x="20" y="50" font-family="Arial, sans-serif" font-size="42" font-weight="bold" fill="#3BB3E7">Focus</text>
+    <!-- Small mountain peak -->
+    <path d="M270 25 L280 35 L290 25" stroke="#FEB142" stroke-width="3" fill="none"/>
+    <!-- Small squiggly line -->
+    <path d="M290 45 Q295 40, 300 45" stroke="#999999" stroke-width="2"/>
+  </g>
+</svg>

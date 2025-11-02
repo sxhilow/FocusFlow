@@ -1,12 +1,10 @@
-import { useState } from 'react'
+import './index.css'
+import Rewards from './pages/Rewards'
 
 function App() {
-
   return (
     <>
-      <div>
-        <p className='text-4xl text-blue-500'>Focus Flow</p>
-      </div>
+      <Rewards />
     </>
   )
 }
