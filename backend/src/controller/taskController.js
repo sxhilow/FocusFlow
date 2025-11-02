@@ -1,133 +1,75 @@
-import Task from '../models/Task.js';
+import { NotFoundError } from '../errors/index.js';
+import Task from '../models/taskModel.js';
+import { StatusCodes } from 'http-status-codes';
 
 // Fetch all tasks for a user
 export const getAllTask = async (req, res) => {
-  try {
-    const tasks = await Task.find({ user: req.user.id }).sort({ startTime: 1 });
-    res.json({
-      status: 'success',
-      results: tasks.length,
-      data: {
-        tasks,
-      },
-    });
-  } catch (error) {
-    res.status(500).json({
-      status: 'error',
-      message: error.message,
-    });
-  }
+  const { userId } = req.user;
+  const tasks = await Task.find({ userId }).sort({ start: 1 });
+  res.status(StatusCodes.OK).json({
+    results: tasks.length,
+    tasks,
+  });
 };
 
 // Fetch a single task
 export const getTask = async (req, res) => {
-  try {
-    const task = await Task.findOne({ 
-      _id: req.params.id, 
-      user: req.user.id 
-    });
+  const { userId } = req.user;
+  const { id : taskId } = req.params
 
-    if (!task) {
-      return res.status(404).json({
-        status: 'error',
-        message: 'Task not found',
-      });
-    }
+  const task = await Task.findOne({ _id: taskId, userId });
 
-    res.json({
-      status: 'success',
-      data: {
-        task,
-      },
-    });
-  } catch (error) {
-    res.status(500).json({
-      status: 'error',
-      message: error.message,
-    });
-  }
+  if (!task) throw new NotFoundError('Task not found');
+
+  res.status(StatusCodes.OK).json({task});
 };
 
 // Create a task
 export const createTask = async (req, res) => {
-  try {
-    const { title, startTime, endTime, category } = req.body;
-    
-    const task = await Task.create({
-      title,
-      startTime,
-      endTime,
-      category,
-      user: req.user.id,
-    });
+  const { userId } = req.user;
+  const { title, start, end, category } = req.body;
+  
+  const task = await Task.create({
+    title,
+    start,
+    end,
+    category,
+    userId,
+  });
 
-    res.status(201).json({
-      status: 'success',
-      data: {
-        task,
-      },
-    });
-  } catch (error) {
-    res.status(400).json({
-      status: 'error',
-      message: error.message,
-    });
-  }
+  res.status(StatusCodes.CREATED).json({task});
 };
 
 // Update a task
 export const updateTask = async (req, res) => {
-  try {
-    const task = await Task.findOneAndUpdate(
-      { _id: req.params.id, user: req.user.id },
-      req.body,
-      { new: true, runValidators: true }
-    );
+  const { userId } = req.user;
+  const { id : taskId } = req.params;
+  const updatesData = req.body
 
-    if (!task) {
-      return res.status(404).json({
-        status: 'error',
-        message: 'Task not found',
-      });
-    }
+  const task = await Task.findOneAndUpdate(
+    { _id: taskId, userId },
+    {$set: updatesData},
+    { new: true, runValidators: true }
+  );
 
-    res.json({
-      status: 'success',
-      data: {
-        task,
-      },
-    });
-  } catch (error) {
-    res.status(400).json({
-      status: 'error',
-      message: error.message,
-    });
-  }
+  if (!task) throw new NotFoundError('Task not found');
+
+  res.status(StatusCodes.OK).json({task});
 };
 
 // Delete a task
 export const deleteTask = async (req, res) => {
-  try {
-    const task = await Task.findOneAndDelete({ 
-      _id: req.params.id, 
-      user: req.user.id 
-    });
+  const { userId } = req.user;
+  const { id : taskId } = req.params
 
-    if (!task) {
-      return res.status(404).json({
-        status: 'error',
-        message: 'Task not found',
-      });
-    }
+  const task = await Task.findOneAndDelete({ 
+    _id: taskId, 
+    userId 
+  });
 
-    res.status(204).json({
-      status: 'success',
-      data: null,
-    });
-  } catch (error) {
-    res.status(500).json({
-      status: 'error',
-      message: error.message,
-    });
-  }
+  if (!task) throw new NotFoundError('Task not found');
+
+  res.status(StatusCodes.OK).json({
+    msg: "Deleted Successfully"
+  });
 };
