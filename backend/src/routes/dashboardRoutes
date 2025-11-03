@@ -1,0 +1,21 @@
+import express from 'express';
+import {
+  getDashboardData,
+  updateFocusedTime,
+  completeTask,
+  getRewards,
+  redeemReward,
+} from '../controllers/dashboardController.js';
+import { protect } from '../controllers/authController.js';
+
+const router = express.Router();
+
+router.use(protect);
+
+router.get('/', getDashboardData);
+router.patch('/focused-time', updateFocusedTime);
+router.patch('/complete-task', completeTask);
+router.get('/rewards', getRewards);
+router.post('/redeem-reward', redeemReward);
+
+export default router;
