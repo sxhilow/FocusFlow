@@ -1,0 +1,223 @@
+import UserStats from '../models/UserStats.js';
+import Reward from '../models/Reward.js';
+import Task from '../models/Task.js';
+
+// Get dashboard data
+export const getDashboardData = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    
+    // Get user stats
+    let userStats = await UserStats.findOne({ user: userId });
+    
+    // If no stats exist, create default stats
+    if (!userStats) {
+      userStats = await UserStats.create({ user: userId });
+    }
+
+    // Update streak logic
+    const today = new Date();
+    const lastActive = new Date(userStats.lastActiveDate);
+    const daysSinceLastActive = Math.floor((today - lastActive) / (1000 * 60 * 60 * 24));
+    
+    if (daysSinceLastActive === 1) {
+      // User was active yesterday, increment streak
+      userStats.currentStreak += 1;
+    } else if (daysSinceLastActive > 1) {
+      // User missed a day, reset streak
+      userStats.currentStreak = 1;
+    }
+    
+    userStats.lastActiveDate = today;
+    await userStats.save();
+
+    // Get popular rewards
+    const popularRewards = await Reward.find({ isActive: true })
+      .limit(4)
+      .sort({ points: 1 });
+
+    // Get today's tasks count
+    const startOfToday = new Date();
+    startOfToday.setHours(0, 0, 0, 0);
+    
+    const endOfToday = new Date();
+    endOfToday.setHours(23, 59, 59, 999);
+
+    const todayTasks = await Task.find({
+      user: userId,
+      startTime: { $gte: startOfToday, $lte: endOfToday }
+    });
+
+    const completedTodayTasks = todayTasks.filter(task => 
+      task.endTime < new Date()
+    ).length;
+
+    // Update tasks completed for today
+    userStats.tasksCompleted = completedTodayTasks;
+    userStats.totalTasks = todayTasks.length;
+    await userStats.save();
+
+    res.json({
+      status: 'success',
+      data: {
+        stats: {
+          focusedTimeToday: userStats.focusedTimeToday,
+          tasksCompleted: userStats.tasksCompleted,
+          totalTasks: userStats.totalTasks,
+          currentStreak: userStats.currentStreak,
+          totalPoints: userStats.totalPoints,
+        },
+        rewards: popularRewards,
+        todayTasks: todayTasks.length,
+      },
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: 'error',
+      message: error.message,
+    });
+  }
+};
+
+// Update focused time
+export const updateFocusedTime = async (req, res) => {
+  try {
+    const { minutes } = req.body;
+    const userId = req.user.id;
+
+    const userStats = await UserStats.findOneAndUpdate(
+      { user: userId },
+      { 
+        $inc: { 
+          focusedTimeToday: minutes,
+          totalPoints: Math.floor(minutes / 5) // 1 point per 5 minutes
+        } 
+      },
+      { new: true, upsert: true }
+    );
+
+    res.json({
+      status: 'success',
+      data: {
+        stats: userStats,
+      },
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: 'error',
+      message: error.message,
+    });
+  }
+};
+
+// Complete a task
+export const completeTask = async (req, res) => {
+  try {
+    const { taskId } = req.body;
+    const userId = req.user.id;
+
+    // Update task as completed
+    const task = await Task.findOneAndUpdate(
+      { _id: taskId, user: userId },
+      { completed: true },
+      { new: true }
+    );
+
+    if (!task) {
+      return res.status(404).json({
+        status: 'error',
+        message: 'Task not found',
+      });
+    }
+
+    // Update user stats
+    const userStats = await UserStats.findOneAndUpdate(
+      { user: userId },
+      { 
+        $inc: { 
+          tasksCompleted: 1,
+          totalPoints: 10 // 10 points per completed task
+        } 
+      },
+      { new: true, upsert: true }
+    );
+
+    res.json({
+      status: 'success',
+      data: {
+        task,
+        stats: userStats,
+      },
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: 'error',
+      message: error.message,
+    });
+  }
+};
+
+// Get all rewards
+export const getRewards = async (req, res) => {
+  try {
+    const rewards = await Reward.find({ isActive: true }).sort({ points: 1 });
+
+    res.json({
+      status: 'success',
+      data: {
+        rewards,
+      },
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: 'error',
+      message: error.message,
+    });
+  }
+};
+
+// Redeem a reward
+export const redeemReward = async (req, res) => {
+  try {
+    const { rewardId } = req.body;
+    const userId = req.user.id;
+
+    // Get reward details
+    const reward = await Reward.findById(rewardId);
+    if (!reward) {
+      return res.status(404).json({
+        status: 'error',
+        message: 'Reward not found',
+      });
+    }
+
+    // Check user points
+    const userStats = await UserStats.findOne({ user: userId });
+    if (!userStats || userStats.totalPoints < reward.points) {
+      return res.status(400).json({
+        status: 'error',
+        message: 'Insufficient points',
+      });
+    }
+
+    // Deduct points
+    userStats.totalPoints -= reward.points;
+    await userStats.save();
+
+    // Here you would typically create a redemption record
+    // For now, we'll just return success
+
+    res.json({
+      status: 'success',
+      data: {
+        reward,
+        remainingPoints: userStats.totalPoints,
+      },
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: 'error',
+      message: error.message,
+    });
+  }
+};
